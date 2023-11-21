@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //
         Schema::create('user_one_time_passwords', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('otp')->unique();
+            $table->dateTime('expires_at');
+            $table->dateTime('verified_at')->nullable();
+            $table->enum('type', ['REGISTRATION', 'LOGIN', 'PASSWORD_RESET', 'VERIFY'])->default('LOGIN');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
